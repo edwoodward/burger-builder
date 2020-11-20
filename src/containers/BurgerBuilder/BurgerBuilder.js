@@ -70,19 +70,21 @@ class BurgerBuilder extends Component {
     }
 
     purchaseContinueHandler = () => {
+        this.props.onInitPurchase();
+        this.props.history.push('/checkout');
         // alert('You continue!');
         // this.setState( { loading: true } );
 
-        const queryParams=[];
-        for(let i in this.state.ingredients) {
-            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
-        }
-        queryParams.push('price=' + this.state.totalPrice);
-        const queryString = queryParams.join('&');
-        this.props.history.push({
-            pathname: '/checkout',
-            search: '?' + queryString
-        });
+        // const queryParams=[];
+        // for(let i in this.state.ingredients) {
+        //     queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+        // }
+        // queryParams.push('price=' + this.props.totalPrice);
+        // const queryString = queryParams.join('&');
+        // this.props.history.push({
+        //     pathname: '/checkout',
+        //     search: '?' + queryString
+        // });
     }
 
     render () {
@@ -128,9 +130,9 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
     return {
-        ingredients: state.ingredients,
-        totalPrice: state.totalPrice,
-        error: state.error
+        ingredients: state.burgerBuilder.ingredients,
+        totalPrice: state.burgerBuilder.totalPrice,
+        error: state.burgerBuilder.error
 
     };
 };
@@ -139,7 +141,8 @@ const mapDispatchToProps = dispatch => {
     return {
         onAddIngredient: (ingredient) => dispatch(bbActions.addIngredients(ingredient)),
         onDeleteIngredient: (ingredient) => dispatch(bbActions.removeIngredients(ingredient)),
-        onFetchIngredients: () => dispatch(bbActions.fetchIngredients())
+        onFetchIngredients: () => dispatch(bbActions.fetchIngredients()),
+        onInitPurchase: () => dispatch(bbActions.purchaseInit())
     };
 };
 
