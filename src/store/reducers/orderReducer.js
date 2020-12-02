@@ -1,4 +1,5 @@
 import * as actions from '../actions/actions';
+import {updateObject} from "../utility";
 
 const initialState = {
     orders: [],
@@ -9,32 +10,27 @@ const initialState = {
 const reducer = (state=initialState, action) => {
     switch (action.type) {
         case actions.PURCHASE_INIT:
-            return {
-                ...state,
-                purchased: false
-            };
+            return updateObject(state, {purchased: false});
         case actions.PURCHASE_BURGER_START:
-            return {
-                ...state,
-                loading: true
-            };
-
+            return updateObject(state, {loading: true});
         case actions.PURCHASE_BURGER_SUCCESS:
-            const newOrder = {
-                ...action.orderData,
-                id: action.orderId
-            };
-            return {
-                ...state,
+            const newOrder = updateObject(action.orderData, {id: action.orderId});
+            return updateObject(state, {
                 loading: false,
                 orders: state.orders.concat(newOrder),
                 purchased: true
-            };
+            });
         case actions.PURCHASE_BURGER_FAIL:
-            return {
-                ...state,
+            return updateObject(state, {loading: false});
+        case actions.FETCH_ORDERS_START:
+            return updateObject(state, {loading: true});
+        case actions.FETCH_ORDERS_SUCCESS:
+            return updateObject(state, {
+                orders: action.orders,
                 loading: false
-            };
+            });
+        case actions.FETCH_ORDERS_FAIL:
+            return updateObject(state, {loading: false});
         default:
             return state;
     }
