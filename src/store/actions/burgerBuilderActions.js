@@ -1,5 +1,5 @@
 import * as actions from './actions';
-import axios from '../../axios';
+import axios from '../../axiosOR';
 
 export const addIngredients = (name) => {
     return {

@@ -1,18 +1,15 @@
 import React, {Component} from 'react';
 import Order from '../../components/Order/Order';
-import axios from '../../axios'
+import axios from '../../axiosOR'
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import * as bbActions from '../../store/actions/index';
 import { connect } from 'react-redux';
 import Spinner from '../../components/UI/Spinner/Spinner';
 
 class Orders extends Component {
-    // state = {
-    //     orders: [],
-    //     loading: true
-    // }
+
     componentDidMount() {
-        this.props.onFetchOrders();
+        this.props.onFetchOrders(this.props.token);
     }
 
     render() {
@@ -36,13 +33,14 @@ class Orders extends Component {
 const mapStateToProps = state => {
     return {
         orders: state.order.orders,
-        loading: state.order.loading
+        loading: state.order.loading,
+        token: state.auth.token
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchOrders: () => dispatch(bbActions.fetchOrders())
+        onFetchOrders: (token) => dispatch(bbActions.fetchOrders(token))
     }
 };
 
