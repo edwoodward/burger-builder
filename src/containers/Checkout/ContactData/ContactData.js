@@ -7,6 +7,7 @@ import Input from '../../../components/UI/Input/Input';
 import { connect } from 'react-redux';
 import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
 import * as actions from '../../../store/actions/index';
+import { updateObject, validate } from '../../../shared/utility'
 
 class ContactData extends Component {
     state = {
@@ -112,40 +113,20 @@ class ContactData extends Component {
     }
 
     inputChangeHandler = (event, inputIdentifier) => {
-        const updatedOrderForm = {
-            ...this.state.orderForm
-        };
-        const updatedFormData = {
-            ...updatedOrderForm[inputIdentifier]
-        };
-        updatedFormData.value = event.target.value;
-        updatedFormData.valid = this.validate(updatedFormData.value, updatedFormData.validation);
-        updatedFormData.touched = true;
-        updatedOrderForm[inputIdentifier] = updatedFormData;
+        const updatedFormElement = updateObject(this.state.orderForm[inputIdentifier], {
+            value: event.target.value,
+            valid: validate(event.target.value, this.state.orderForm[inputIdentifier].validation),
+            touched: true
+        });
+        const updatedOrderForm = updateObject(this.state.orderForm, {
+            [inputIdentifier]: updatedFormElement
+        });
 
         let formIsValid = true;
-        for(let inputIdentifier in updatedOrderForm) {
+        for (let inputIdentifier in updatedOrderForm) {
             formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
         }
-        console.log('formIsValid: ' + formIsValid);
-
         this.setState({orderForm: updatedOrderForm, formIsValid: formIsValid});
-    }
-
-    validate(value, rules) {
-        let isValid = true;
-        if(rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if(rules.minLength){
-            isValid = value.length >= rules.minLength && isValid
-        }
-
-        if(rules.maxLength){
-            isValid = value.length <= rules.maxLength && isValid
-        }
-        return isValid;
     }
 
     render() {

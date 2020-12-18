@@ -11,15 +11,13 @@ import thunk from 'redux-thunk';
 import orderReducer from './store/reducers/orderReducer';
 import authReducer from './store/reducers/authReducer';
 
-const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancer = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose : null;
 const rootReducer = combineReducers({
     burgerBuilder: burgerBuilderReducer,
     order: orderReducer,
     auth: authReducer
 });
 const store = createStore(rootReducer, composeEnhancer(applyMiddleware(thunk)));
-//const store = createStore(burgerBuilderReducer,
-//    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 const app = (
     <Provider store={store}>
